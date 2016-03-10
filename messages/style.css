@@ -1,1 +1,8 @@
 /* Your CSS here... */
+p {
+	background-color: #667788;
+}
+
+.author {
+	font-size: small;
+}
