@@ -15,7 +15,7 @@ function parse () {
 			raw = request.responseText;
 			msg = JSON.parse(raw);
 			for (i = 0; i < msg.length; i++) {
-				content += "<p>" + msg[i].content + '<span class = "author">' + msg[i].username + "</span></p>";
+				content += "<p>" + msg[i].content + ' <span class = "author">' + msg[i].username + "</span></p>";
 			}
 			element.innerHTML = content;
 		}
