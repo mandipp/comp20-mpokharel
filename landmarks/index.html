@@ -8,5 +8,35 @@
 	</head>
 
 	<body>
+	<script>
+		var myLat = 0;
+		var myLng = 0;
+
+		var me = new google.maps.LatLng(myLat,myLng);
+		var myOptions = {
+						zoom: 12,
+						center: me,
+						mapTypeId: google.maps.MapTypeId.ROADMAP
+					};
+		var map;
+		var marker;
+		var infowindow = new google.maps.InfoWindow();
+
+		function init() {
+			map = new google.maps.Map(document.getElementById("mapdiv"), myOptions);
+			getMyLocation();
+		}
+
+		function getMyLocation() {
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position){
+					myLat = position.coords.latitude;
+					myLng = position.coords.longitude;
+					renderMap();
+				})
+			}
+		}
+		
+	</script>
 		<div id = "mapdiv"></div>
 	</body>
