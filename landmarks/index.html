@@ -38,12 +38,32 @@
 					alert("Geolocation is not supported by your web browser.  What a shame!");
 				}
 			}
+
+			function requestData() {
+				request = new XMLHttpRequest()
+				request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
+				request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				request.onreadystatechange = callme;
+				
+				//concatenating lat and lng
+				sendString = "login=DONNY_MAXWELL&lat=" + myLat + "&lng=" + myLng;
+				request.send(sendString);
+
+				//handling response
+				function callme() {
+					if (request.readyState === 4) {
+
+					}
+				}
+			}
+
 			function renderMap()
 			{
 				me = new google.maps.LatLng(myLat, myLng);
 				
 				// Update map and go there...
 				map.panTo(me);
+				//requestData();
 	
 				// Create a marker
 				marker = new google.maps.Marker({
