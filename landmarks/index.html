@@ -40,6 +40,7 @@
 			}
 
 			function requestData() {
+				console.log("here");
 				request = new XMLHttpRequest()
 				request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
 				request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -53,6 +54,7 @@
 				function callme() {
 					if (request.readyState === 4) {
 						raw = request.responseText;
+						console.log(raw);
 						alldata = JSON.parse(raw);
 						for (i = 0; i < alldata["people"].length; i++) {							
 							currentLat = alldata["people"][i]["lat"];
@@ -61,6 +63,7 @@
 							currentLogin = alldata["people"][i]["login"];
 							marker = new google.maps.Marker({
 								position: currentPos,
+								map: map,
 								content: currentLogin
 							})
 						}
@@ -69,10 +72,11 @@
 							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][2];
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
 							currentTitle = alldata["landmarks"][j]["properties"]["Location_Name"];
-							currentContent = alldata["landmarks"][j]["properties"]["Details"];
+							currentDetails = alldata["landmarks"][j]["properties"]["Details"];
+							currentContent = "Location: " + currentTitle + "<br />Details: " + currentDetails;
 							marker = new google.maps.Marker({
 								position: currentPos,
-								title: currentTitle,
+								map: map,
 								content: currentContent
 							})
 						}
@@ -86,7 +90,6 @@
 				
 				// Update map and go there...
 				map.panTo(me);
-				//requestData();
 	
 				// Create a marker
 				marker = new google.maps.Marker({
@@ -100,6 +103,8 @@
 					infowindow.setContent(marker.title);
 					infowindow.open(map, marker);
 				});
+
+				requestData();
 			}
 		</script>
 	</head>
