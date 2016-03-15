@@ -12,7 +12,7 @@
 			var request = new XMLHttpRequest();
 			var me = new google.maps.LatLng(myLat, myLng);
 			var myOptions = {
-						zoom: 13, // The larger the zoom number, the bigger the zoom
+						zoom: 15, // The larger the zoom number, the bigger the zoom
 						center: me,
 						mapTypeId: google.maps.MapTypeId.ROADMAP
 					};
@@ -40,7 +40,6 @@
 			}
 
 			function requestData() {
-				console.log("here");
 				request = new XMLHttpRequest()
 				request.open("POST", "https://defense-in-derpth.herokuapp.com/sendLocation", true);
 				request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -54,20 +53,46 @@
 				function callme() {
 					if (request.readyState === 4) {
 						raw = request.responseText;
-						console.log(raw);
 						alldata = JSON.parse(raw);
+						//defining/scaling icon
+						var peopleicon = {
+							url: "person.png",
+							scaledSize: new google.maps.Size(15, 15),
+							origin: new google.maps.Point(0, 0),
+							anchor: new google.maps.Point(0, 0)
+						}
 						for (i = 0; i < alldata["people"].length; i++) {							
 							currentLat = alldata["people"][i]["lat"];
 							currentLng = alldata["people"][i]["lng"];
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
 							currentLogin = alldata["people"][i]["login"];
-							marker = new google.maps.Marker({
+							if (currentLogin == "DONNY_MAXWELL") {
+								marker = new google.maps.Marker({
 								position: currentPos,
 								map: map,
+								//animation: google.maps.Animation.BOUNCE,
 								content: currentLogin
-							})
+								})
+							}
+							else {
+								marker = new google.maps.Marker({
+								position: currentPos,
+								map: map,
+								content: currentLogin,
+								icon: peopleicon
+								})
+							}
+							
+
+							google.maps.event.addListener(marker, 'click', function() {
+								infowindow.setContent(this.content);
+								infowindow.open(this.getMap(), this);
+							});
+
+							
 						}
 						for (j = 0; j < alldata["landmarks"].length; j++) {
+							console.log("in j");
 							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][1];
 							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][2];
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
@@ -79,6 +104,11 @@
 								map: map,
 								content: currentContent
 							})
+
+							google.maps.event.addListener(marker, 'click', function() {
+								infowindow.setContent(this.content);
+								infowindow.open(this.getMap(), this);
+							});
 						}
 					}
 				}
@@ -90,21 +120,27 @@
 				
 				// Update map and go there...
 				map.panTo(me);
+
+				
 	
 				// Create a marker
-				marker = new google.maps.Marker({
+				/*myMarker = new google.maps.Marker({
 					position: me,
+					animation: google.maps.Animation.BOUNCE,
 					title: "Here I Am!"
 				});
-				marker.setMap(map);
+				myMarker.setMap(map);
+				console.log(myMarker.title);
 					
 				// Open info window on click of marker
-				google.maps.event.addListener(marker, 'click', function() {
-					infowindow.setContent(marker.title);
-					infowindow.open(map, marker);
+				google.maps.event.addListener(myMarker, 'click', function() {
+					infowindow.setContent(myMarker.title);
+					infowindow.open(map, myMarker);
 				});
+				*/
 
 				requestData();
+
 			}
 		</script>
 	</head>
