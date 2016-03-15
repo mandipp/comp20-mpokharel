@@ -52,7 +52,18 @@
 				//handling response
 				function callme() {
 					if (request.readyState === 4) {
-
+						raw = request.responseText;
+						alldata = JSON.parse(raw);
+						for (i = 0; i < alldata["people"].length; i++) {							
+							currentLat = alldata["people"][i]["lat"];
+							currentLng = alldata["people"][i]["lng"];
+							currentPos = new google.maps.LatLng(currentLat, currentLng);
+							currentLogin = alldata["people"][i]["login"];
+							marker = new google.maps.Marker({
+								position: currentPos,
+								content: currentLogin
+							})
+						}
 					}
 				}
 			}
