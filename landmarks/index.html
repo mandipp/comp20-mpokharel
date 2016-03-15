@@ -63,6 +63,7 @@
 						}
 						for (i = 0; i < alldata["people"].length; i++) {							
 							currentLat = alldata["people"][i]["lat"];
+							console.log(currentLat);
 							currentLng = alldata["people"][i]["lng"];
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
 							currentLogin = alldata["people"][i]["login"];
@@ -94,18 +95,21 @@
 						for (j = 0; j < alldata["landmarks"].length; j++) {
 							console.log("in j");
 							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][1];
+							console.log(currentLat);
 							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][2];
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
 							currentTitle = alldata["landmarks"][j]["properties"]["Location_Name"];
 							currentDetails = alldata["landmarks"][j]["properties"]["Details"];
-							currentContent = "Location: " + currentTitle + "<br />Details: " + currentDetails;
-							marker = new google.maps.Marker({
+							currentContent = "Location: " + currentTitle + "Details: " + currentDetails;
+							
+							landmarker = new google.maps.Marker({
 								position: currentPos,
 								map: map,
 								content: currentContent
 							})
+							
 
-							google.maps.event.addListener(marker, 'click', function() {
+							google.maps.event.addListener(landmarker, 'click', function() {
 								infowindow.setContent(this.content);
 								infowindow.open(this.getMap(), this);
 							});
