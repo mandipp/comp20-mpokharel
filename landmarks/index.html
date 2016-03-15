@@ -64,6 +64,18 @@
 								content: currentLogin
 							})
 						}
+						for (j = 0; j < alldata["landmarks"].length; j++) {
+							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][1];
+							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][2];
+							currentPos = new google.maps.LatLng(currentLat, currentLng);
+							currentTitle = alldata["landmarks"][j]["properties"]["Location_Name"];
+							currentContent = alldata["landmarks"][j]["properties"]["Details"];
+							marker = new google.maps.Marker({
+								position: currentPos,
+								title: currentTitle,
+								content: currentContent
+							})
+						}
 					}
 				}
 			}
