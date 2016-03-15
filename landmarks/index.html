@@ -93,10 +93,9 @@
 							
 						}
 						for (j = 0; j < alldata["landmarks"].length; j++) {
-							console.log("in j");
-							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][1];
+							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][0];
 							console.log(currentLat);
-							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][2];
+							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][1];
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
 							currentTitle = alldata["landmarks"][j]["properties"]["Location_Name"];
 							currentDetails = alldata["landmarks"][j]["properties"]["Details"];
