@@ -1,6 +1,7 @@
 #Assignment 2#
 ==================================
 Two APIs were used in this project.
+
 1. Google Maps
 2. A Datastore JSON API
 
