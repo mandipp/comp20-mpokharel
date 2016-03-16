@@ -1,5 +1,15 @@
 #Assignment 2#
 ==================================
+Two APIs were used in this project.
+1. Google Maps
+2. A Datastore JSON API
+
+All the requirements as outlined in the assignment sheet have been met.
+*Note: In virtual machine, the navigator.geolocation object shows my location as being about half a mile away from where my location actually is (as seen in Google maps in normal window)
+
+Many thanks to Danish Bhatti from this class for his help in solving the landmarks problem via Piazza. Thanks also to Ming for the same reason.
+
+Total time taken: ~12 hrs.
 
 ## References ##
 
