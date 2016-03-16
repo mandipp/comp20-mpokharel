@@ -55,9 +55,8 @@
 			function callme() {
 					if (request.readyState === 4) {
 						raw = request.responseText;
-						console.log(raw);
 						alldata = JSON.parse(raw);
-						console.log(alldata);
+						
 						//defining/scaling icon
 						var peopleicon = {
 							url: "person.png",
@@ -78,43 +77,7 @@
 						lowLat = alldata["landmarks"][0]["geometry"]["coordinates"][1];
 						lowLng = alldata["landmarks"][0]["geometry"]["coordinates"][0];
 						var lowestDist = findDist(myLat, myLng, lowLat, lowLng);
-						
-						for (i = 0; i < alldata["people"].length; i++) {
-												
-							currentLat = alldata["people"][i]["lat"];
-							//console.log(currentLat);
-							currentLng = alldata["people"][i]["lng"];
-							currentPos = new google.maps.LatLng(currentLat, currentLng);
-							currentLogin = alldata["people"][i]["login"];
-							if (currentLogin == "DONNY_MAXWELL") {
-								marker = new google.maps.Marker({
-								position: currentPos,
-								map: map,
-								//animation: google.maps.Animation.BOUNCE,
-								content: currentLogin
-								})
-							}
-							else {
-								dist = findDist(myLat, myLng, currentLat, currentLng);
-								currentContent = currentLogin + "<br /> Distance from you: " + dist + " miles";
-								marker = new google.maps.Marker({
-									position: currentPos,
-									map: map,
-									content: currentContent,
-									icon: peopleicon
-								})
-							}
-							
 
-							google.maps.event.addListener(marker, 'click', function() {
-								console.log("people add listener");
-								infowindow.setContent(this.content);
-								infowindow.open(this.getMap(), this);
-							});
-
-							
-						}
-						//console.log(alldata["landmarks"]);
 						for (j = 0; j < alldata["landmarks"].length; j++) {
 							
 							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][1];
@@ -125,6 +88,7 @@
 								closestIndex = j;
 								lowestDist = currentDist;
 							}
+
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
 							
 							currentTitle = alldata["landmarks"][j]["properties"]["Location_Name"];
@@ -143,6 +107,55 @@
 								infowindow.setContent(this.content);
 								infowindow.open(map, this);
 							});
+						}
+						closestLandmark = alldata["landmarks"][closestIndex]["properties"]["Location_Name"]
+
+						for (i = 0; i < alldata["people"].length; i++) {
+												
+							currentLat = alldata["people"][i]["lat"];
+							currentLng = alldata["people"][i]["lng"];
+							currentPos = new google.maps.LatLng(currentLat, currentLng);
+							currentLogin = alldata["people"][i]["login"];
+							if (currentLogin == "DONNY_MAXWELL") {
+								currentContent = currentLogin + "<br />Closest landmark is: " + closestLandmark + ", that is " + lowestDist + " miles away!";
+								marker = new google.maps.Marker({
+									position: currentPos,
+									map: map,
+									animation: google.maps.Animation.BOUNCE,
+									content: currentContent
+								})
+
+								closestLat = alldata["landmarks"][closestIndex]["geometry"]["coordinates"][1];
+								closestLng = alldata["landmarks"][closestIndex]["geometry"]["coordinates"][0];
+								polypath = [{lat: myLat, lng: myLng}, 
+											{lat: closestLat, lng: closestLng}];
+								var myPath = new google.maps.Polyline({
+									path: polypath,
+									geodesic: true,
+									strokeColor: '#6633AA',
+									strokeOpacity: 0.5,
+									strokeWeight: 7
+								})
+								myPath.setMap(map);
+							}
+							else {
+								dist = findDist(myLat, myLng, currentLat, currentLng);
+								currentContent = currentLogin + "<br /> Distance from you: " + dist + " miles";
+								marker = new google.maps.Marker({
+									position: currentPos,
+									map: map,
+									content: currentContent,
+									icon: peopleicon
+								})
+							}
+							
+
+							google.maps.event.addListener(marker, 'click', function() {
+								infowindow.setContent(this.content);
+								infowindow.open(this.getMap(), this);
+							});
+
+							
 						}
 					}
 				}
