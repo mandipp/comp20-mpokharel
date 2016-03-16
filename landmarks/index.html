@@ -55,6 +55,7 @@
 			function callme() {
 					if (request.readyState === 4) {
 						raw = request.responseText;
+						console.log(raw);
 						alldata = JSON.parse(raw);
 						console.log(alldata);
 						//defining/scaling icon
@@ -108,14 +109,14 @@
 						//console.log(alldata["landmarks"]);
 						for (j = 0; j < alldata["landmarks"].length; j++) {
 							
-							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][0];
-							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][1];
+							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][1];
+							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][0];
 
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
 							
 							currentTitle = alldata["landmarks"][j]["properties"]["Location_Name"];
 							currentDetails = alldata["landmarks"][j]["properties"]["Details"];
-							currentContent = "Location: " + currentTitle + "< /br> Details: " + currentDetails;
+							currentContent = "Location: " + currentTitle + "<br /> Details: " + currentDetails;
 							
 							newMarker = new google.maps.Marker({
 								position: currentPos,
@@ -133,11 +134,17 @@
 					}
 				}
 			
-			/*function findDist (lat1, lng1, lat2, lng2) {
-				var r = 6371000;
-				var dellat = (lat2)
-			}
-*/
+			// function findDist (lat1, lng1, lat2, lng2) {
+			// 	var r = 6371000;
+			// 	var dellat = (lat2 - lat1).toRadians();
+			// 	var dellng = (lng2 - lng1).toRadians();
+			// 	var lat1rad = lat1.toRadians();
+			// 	var lat2rad = lat2.toRadians();
+			// 	var a = Math.sin(dellat/2) * Math.sin(dellat/2) + Math.cos(lat1rad) * Math.cos(lat2rad) * Math.sin(dellng/2) * Math.sin(dellng/2);
+			// 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+			// 	var dist = r * c;
+			// }
 			function renderMap()
 			{
 				me = new google.maps.LatLng(myLat, myLng);
