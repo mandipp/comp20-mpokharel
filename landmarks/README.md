@@ -18,3 +18,4 @@ Total time taken: ~12 hrs.
 2. https://github.com/tuftsdev/WebProgramming/blob/gh-pages/examples/google_maps/geolocation_map.html
 3. https://github.com/tuftsdev/WebProgramming/blob/gh-pages/examples/google_maps/geolocation_map_style.css
 4. https://developers.google.com/maps/documentation/javascript/
+5. http://stackoverflow.com/questions/14560999/using-the-haversine-formula-in-javascript
