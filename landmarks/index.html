@@ -73,6 +73,12 @@
 							anchor: new google.maps.Point(0, 0)
 						}
 
+						var closestIndex = 0; //index of closest landmark
+						//for lowest distance
+						lowLat = alldata["landmarks"][0]["geometry"]["coordinates"][1];
+						lowLng = alldata["landmarks"][0]["geometry"]["coordinates"][0];
+						var lowestDist = findDist(myLat, myLng, lowLat, lowLng);
+						
 						for (i = 0; i < alldata["people"].length; i++) {
 												
 							currentLat = alldata["people"][i]["lat"];
@@ -89,11 +95,13 @@
 								})
 							}
 							else {
+								dist = findDist(myLat, myLng, currentLat, currentLng);
+								currentContent = currentLogin + "<br /> Distance from you: " + dist + " miles";
 								marker = new google.maps.Marker({
-								position: currentPos,
-								map: map,
-								content: currentLogin,
-								icon: peopleicon
+									position: currentPos,
+									map: map,
+									content: currentContent,
+									icon: peopleicon
 								})
 							}
 							
@@ -112,6 +120,11 @@
 							currentLat = alldata["landmarks"][j]["geometry"]["coordinates"][1];
 							currentLng = alldata["landmarks"][j]["geometry"]["coordinates"][0];
 
+							currentDist = findDist(myLat, myLng, currentLat, currentLng);
+							if (currentDist < lowestDist) {
+								closestIndex = j;
+								lowestDist = currentDist;
+							}
 							currentPos = new google.maps.LatLng(currentLat, currentLng);
 							
 							currentTitle = alldata["landmarks"][j]["properties"]["Location_Name"];
@@ -134,17 +147,23 @@
 					}
 				}
 			
-			// function findDist (lat1, lng1, lat2, lng2) {
-			// 	var r = 6371000;
-			// 	var dellat = (lat2 - lat1).toRadians();
-			// 	var dellng = (lng2 - lng1).toRadians();
-			// 	var lat1rad = lat1.toRadians();
-			// 	var lat2rad = lat2.toRadians();
-			// 	var a = Math.sin(dellat/2) * Math.sin(dellat/2) + Math.cos(lat1rad) * Math.cos(lat2rad) * Math.sin(dellng/2) * Math.sin(dellng/2);
-			// 	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+			function findDist (lat1, lng1, lat2, lng2) {
+				var r = 6371000;
+				var dellat = toRadians(lat2 - lat1);
+				var dellng = toRadians(lng2 - lng1);
+				var lat1rad = toRadians(lat1);
+				var lat2rad = toRadians(lat2);
+				var a = Math.sin(dellat/2) * Math.sin(dellat/2) + Math.cos(lat1rad) * Math.cos(lat2rad) * Math.sin(dellng/2) * Math.sin(dellng/2);
+				var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
-			// 	var dist = r * c;
-			// }
+				var dist = (r * c) * 0.000621371;
+				return dist;
+			}
+
+			function toRadians(val) {
+				return val * Math.PI / 180;
+			}
+
 			function renderMap()
 			{
 				me = new google.maps.LatLng(myLat, myLng);
