@@ -1,0 +1,12 @@
+h1 {
+	background-color: #B0E0E6;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 20px;
+}
+
+#log {
+	background-color: #FAFAD2;
+	border-radius: 10px;
+	padding: 20px;
+}
