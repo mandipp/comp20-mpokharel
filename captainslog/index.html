@@ -12,7 +12,7 @@
 	  			var datenow = new Date();
 	  			console.log(datenow);
 	  			str = $("#msg").val();
-	  			localStorage[new Date().getTime()] = str;
+	  			localStorage[datenow] = str;
 	  			reload();
 	  		})
 	  	})
@@ -20,7 +20,7 @@
 	  	function reload() {
 	  		output = "";
 	  		for (key in localStorage) {
-	  			output = localStorage[key] + "<p>" + output + "</p>";
+	  			output = key + " - " + localStorage[key] + "<p>" + output + "</p>";
 	  		}
 	  		$("#log").html(output);
 	  	}
