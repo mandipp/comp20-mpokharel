@@ -6,7 +6,24 @@
 	<title>Captain's Log</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
 	<script>
-	  // Your work will be done here...
+		// Your work will be done here...
+	  	$(document).ready(function() {
+	  		$("#msg").change(function() {
+	  			var datenow = new Date();
+	  			console.log(datenow);
+	  			str = $("#msg").val();
+	  			localStorage[new Date().getTime()] = str;
+	  			reload();
+	  		})
+	  	})
+
+	  	function reload() {
+	  		output = "";
+	  		for (key in localStorage) {
+	  			output = localStorage[key] + "<p>" + output + "</p>";
+	  		}
+	  		$("#log").html(output);
+	  	}
 	</script>
 </head>
 
