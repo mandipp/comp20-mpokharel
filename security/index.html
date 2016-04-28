@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>Historic Landmarks Security Report</title>
+	<link rel="stylesheet" href="indexstyle.css" type="text/css" />
+</head>
+<body>
+<h1>Introduction</h1>
+<p>
+	This report provides security assessment of the web application 'Historic Landmarks'. The application currently takes in user login, and values of their current location coordinates and responds with the details of landmarks within a one-mile radius of the user's location. A web interface also displayed the list of all people who checked in (used their information to get landmark response from the server). Another web interface could be used to retrieve a JSON of the checkin data of a single user. The application is also accompanied by a browser-based interface (part of Assignment 2) that uses the Google maps API to print a map and mark the user's checkins and the nearby landmarks on it.
+</p>
+<hr />
+
+<h1>Methodology</h1>
+<p>
+	For this Assessment, I employed black-box attacks, attempting to exploit vulnerabilities without looking at the code. I then tried to exploit holes in the code. The tools used in this process were Postman extension for Google Chrome and a web browser. 
+</p>
+<hr />
+
+<h1>Abstract of Findings</h1>
+<p>
+	The web application does what it is supposed to do. But in trusting user input and not employing safeguards against malicious intent on the user's part, it leaves itself vulnerable from multiple standpoints.
+	If used exclusively with the accompanying web page (from Assignment 2) on a browser, a couple of these vulnerabilities would vanish, but one cannot expect an attacker to play by the rules. Using the tools I used in testing the application, an attacker could perform all the attacks I performed. As such, currently the application is not completely ready to be rolled out for public use without compromising security and privacy of users.
+</p>
+<hr />
+
+<h1>Issues Found</h1>
+<ol>
+<div>
+<li>Cross-site Scripting
+	<ul>
+		<li>Severity: HIGH! An attacker is able to exploit this weakness by injecting a script and that can cause problems to all products that would use the app/sendLocation API.</li>
+		<li> Through the POST API /sendLocation, a user is able to send a Javascript script to the server. Since the data is not escaped, the data received by the server is compromised. When a user uses the service through the webpage from Assignment 2, all the parameters are pre-determined, but using a service like Curl or Postman, it is very easy to inject malicious code into the server. The following images provide an example. I used Postman to post a simple script that pushes an alert.
+		</li>
+		<img src = "pictures/postman.png" />
+		<img src = "pictures/browser.png" />
+		<li>
+		Can easily be solved by escaping user input before inserting the values received into the database.
+		</li>
+	</ul>
+</li>
+</div>
+<div>
+<li>HTML Injection
+	<ul>
+		<li>
+			Severity: Low. An attacker is able to enter HTML elements other than text/numbers via the POST API /sendLocation and deface the website.
+		</li>
+		<li>
+		Similar to XSS case with the Javascript code, other HTML codes can also be injected into the database. The web interface showing all checkins is affected. This vulnerability can be used to deface the website. <br />
+		Another potential issue would be use of gifs, which are very useful attacking tools because of the potential of appending JS codes to GIF files. While this would not inject the code into the source or the database, this is still an issue that can be looked into.
+		</li>
+		<li>
+		Can be solved in a manner similar to the previous issue: Escaping user input!
+		</li>
+		<img src="pictures/html_injection.png" />
+	</ul>
+</li>
+</div>
+<div>
+<li>Display of All Information
+	<ul>
+		<li>
+			Severity: HIGH! This is a big privacy hole, as an attacker could access the entire database through this attack.
+		</li>
+		<li>
+			The web interface /checkins.json is affected by this vulnerability. If the attacker were to enter the following query through a modern web browser, the server would return the entire database in JSON form.
+			<strong>?login[$ne]= </strong><br />
+			Adding that to the URL is equivalent to adding this to the application:
+			db.collection.find({login: {$ne: ""}}) <br />
+			which is the same as saying give me everything that does not have blank in the login field.
+			This is a huge violation of privacy of all users that have checked in through this service, as the attacker can pretty much track their location throughout time.
+
+		</li>
+		<img src = "pictures/all_records.png" />
+		<li> To solve this problem (and related ones), it is possible to escape the '$' character. <br />
+		Another alternative is to use the Mongo sanitizer tool. From the npm website, the code to include in the application is as follows: 
+		<pre>
+		<code>
+		var sanitize = require('mongo-sanitize');
+ 
+		// The sanitize function will strip out any keys that start with '$' in the input,
+		// so you can pass it to MongoDB without worrying about malicious users overwriting
+		// query selectors.
+		var clean = sanitize(req.query.login);
+		 
+		db.checkins.find({ login: clean }, function(err, doc) {
+		  // ...
+
+		</code>
+		</pre>
+		</li>
+	</ul>
+
+</li>
+</div>
+</ol>
+
+<h1>Conclusion</h1>
+<p>
+	The web application in question is rigged with some vulnerabilities that currently make it unsuitable to be rolled out to the public. These issues affect both security and privacy of the users. The biggest issue however is trusting the user input too much. given recommendations go some way towards solcing that, but in correcting these issues that have been pointed out in this report, the client would also find that they can extend these recommendations to prevent any other issues not detected yet!
+	Curently, the users do not need to have valid user login to check in or retrieve data. Introducing a concept of user login could create some degree of responsibility in users and prevent some from actively trying to defame the interfaces!
+</p>
+
+<h1>References</h1>
+<ul>
+<li>https://www.npmjs.com/package/mongo-sanitize</li>
+<li> http://stackoverflow.com/questions/30585213/do-i-need-to-sanitize-user-input-before-inserting-in-mongodb-mongodbnode-js-co</li>
+</ul>
+
+
+</body>
+</html>
